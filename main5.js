@@ -1,8 +1,8 @@
-const baseURL = "https://swapi.co/api/";
-function getData(type, cb) { //we create a function with the parameter cb, stands for 'callback' function, which is a function that we will pass in
+
+function getData(url, cb) { //we create a function with the parameter cb, stands for 'callback' function, which is a function that we will pass in
     
     var xhr = new XMLHttpRequest();  //creates a new instance of the XMLHttpRequest object
-    xhr.open("GET", baseURL + type + "/" ); // xhr.open() method, with which we pass the argument 'GET' first (Remember, GET and POST are the most often methods to communicate with a web server), second argument ist the StarWars API using the URL
+    xhr.open("GET", url ); // xhr.open() method, with which we pass the argument 'GET' first (Remember, GET and POST are the most often methods to communicate with a web server), second argument ist the StarWars API using the URL
     xhr.send(); // xhr.send() to send the request
 
     xhr.onreadystatechange = function () {
@@ -21,11 +21,27 @@ function getTableHeaders(obj) {
     return `<tr>${tableHeaders}</tr>`;
 }
 
-function writeToDocument(type) {
+function generatePaginationButtons(next, prev) {
+    if (next && prev) {
+        return `<button onClick='writeToDocument(${prev})'>Previous</button>
+                <button onClick='writeToDocument(${next})'/>Next</button>`;
+    } else if (next && !prev) {
+        return `<button onClick='writeToDocument(${next})'/>Next</button>`;
+    } else if (!next && prev) {
+        return `<button onClick='writeToDocument(${prev})'>Previous</button>`;
+    }
+}
+
+function writeToDocument(url) {
     var tableRows = [];
     var el = document.getElementById('data');
 
-    getData(type, function(data) {
+    getData(url, function(data) {
+
+        var pagination ='';
+        if (data.next || data.previous) {
+            pagination = generatePaginationButtons (data.next, data.previous)
+        }
 
         data = data.results; // we are going to overwrite our existing data variable with data.results
         var tableHeaders = getTableHeaders(data[0]);
@@ -41,7 +57,7 @@ function writeToDocument(type) {
             tableRows.push(`<tr>${dataRow}</tr>`);
         });
 
-        el.innerHTML = `<table>${tableHeaders}${tableRows}</table>`;
+        el.innerHTML = `<table>${tableHeaders}${tableRows}</table>${pagination}`;
         
     });  
 };

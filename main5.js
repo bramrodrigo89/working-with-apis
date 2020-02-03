@@ -24,7 +24,6 @@ function getTableHeaders(obj) {
 function writeToDocument(type) {
     var tableRows = [];
     var el = document.getElementById('data');
-    el.innerHTML = ' ';
 
     getData(type, function(data) {
 
@@ -33,10 +32,13 @@ function writeToDocument(type) {
 
         data.forEach(function(item) {
             var dataRow = [];
+
             Object.keys(item).forEach(function(key){
-                dataRow.push(`<td>${item[key]}</td>`)
+                var cellData = item[key].toString(); //converts cell data into strings
+                var truncatedData = cellData.substring(0,15); //takes only the first 15 characters from every cell content
+                dataRow.push(`<td>${truncatedData}</td>`);
             });
-            tableRows.push(dataRow);
+            tableRows.push(`<tr>${dataRow}</tr>`);
         });
 
         el.innerHTML = `<table>${tableHeaders}${tableRows}</table>`;

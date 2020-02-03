@@ -23,12 +23,12 @@ function getTableHeaders(obj) {
 
 function generatePaginationButtons(next, prev) {
     if (next && prev) {
-        return `<button onClick='writeToDocument(${prev})'>Previous</button>
-                <button onClick='writeToDocument(${next})'/>Next</button>`;
+        return `<button onclick="writeToDocument('${prev}')">Previous</button>
+                <button onclick="writeToDocument('${next}')">Next</button>`;
     } else if (next && !prev) {
-        return `<button onClick='writeToDocument(${next})'/>Next</button>`;
+        return `<button onclick="writeToDocument('${next}')">Next</button>`;
     } else if (!next && prev) {
-        return `<button onClick='writeToDocument(${prev})'>Previous</button>`;
+        return `<button onclick="writeToDocument('${prev}')">Previous</button>`;
     }
 }
 
@@ -40,7 +40,7 @@ function writeToDocument(url) {
 
         var pagination ='';
         if (data.next || data.previous) {
-            pagination = generatePaginationButtons (data.next, data.previous)
+            pagination = generatePaginationButtons(data.next, data.previous);
         }
 
         data = data.results; // we are going to overwrite our existing data variable with data.results
